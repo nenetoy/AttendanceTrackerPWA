@@ -1,8 +1,6 @@
-const CACHE = 'attendance-tracker-pwa-v1';
+const CACHE = 'attendance-tracker-pwa-v2';
 
 const APP_SHELL = [
-  './',
-  './index.html',
   './manifest.webmanifest',
   './icons/icon-192.png',
   './icons/icon-512.png'
@@ -33,28 +31,4 @@ self.addEventListener('fetch', event => {
 
   if (request.method !== 'GET') return;
 
-  if (
-    request.url.includes('firebase') ||
-    request.url.includes('googleapis') ||
-    request.url.includes('gstatic')
-  ) {
-    event.respondWith(
-      fetch(request).catch(() => caches.match(request))
-    );
-    return;
-  }
-
-  event.respondWith(
-    caches.match(request).then(cached => {
-      if (cached) return cached;
-
-      return fetch(request)
-        .then(response => {
-          const copy = response.clone();
-          caches.open(CACHE).then(cache => cache.put(request, copy));
-          return response;
-        })
-        .catch(() => caches.match('./index.html'));
-    })
-  );
-});
+  if (request.mode === '
